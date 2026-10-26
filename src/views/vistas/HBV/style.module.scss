@@ -1,0 +1,353 @@
+@import "../../../styles/constants";
+@import "icosa/styles/select";
+@import "icosa/styles/extension";
+@import "icosa/styles/colors";
+
+.form-container {
+  padding: 1.25rem 1.5rem;
+  background-color: color(panel-bg);
+  border: 1px solid color(dividing-line);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.instruction {
+  line-height: 1.5;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.instruction-list {
+  line-height: 1.5;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 1rem;
+}
+
+.step-heading {
+  margin: 0.5em 0;
+  font-size: 1.35rem;
+}
+
+.submission-guide {
+  margin-top: 2rem;
+  line-height: 1.5;
+
+  h2 {
+    margin-top: 2rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid color(dividing-line);
+    font-size: 1.35rem;
+  }
+
+  h3 {
+    margin-top: 1.5rem;
+    font-size: 1.15rem;
+  }
+
+  ol, ul {
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.analyze-base-form {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  font-size: 1.1rem;
+
+  .analyze-base-form-buttons {
+    margin-top: 1rem;
+
+    &::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    > button {
+      margin-left: 1rem;
+      float: right;
+    }
+  }
+
+  .analyze-base-form-submit-options {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    > span {
+      display: block;
+      margin-left: 1rem;
+      float: right;
+
+      > label {
+        margin-right: 0;
+      }
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+.detail-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  position: relative;
+  gap: 1.5rem;
+}
+
+.detail-controls::before {
+  content: '';
+  position: absolute;
+  left: calc(30% + 0.75rem);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  border-left: 1px dashed rgba(0, 0, 0, 0.35);
+}
+
+.descriptions {
+  width: 100%;
+  margin-right: 0;
+}
+
+.treatment-group {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 1rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0;
+
+  .input-label {
+    display: inline-block;
+    width: 12rem;
+    padding-top: 0.35rem;
+    text-wrap: wrap;
+    font-weight: 600;
+  }
+
+  .selection {
+    min-width: 11rem;
+  }
+
+  .input-box {
+    resize: vertical;
+    min-height: 2rem;
+    min-width: 9rem;
+    align-items: center;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+  }
+
+  .input-box::placeholder {
+    padding-left: 0.5rem;
+  }
+}
+
+.instruction3 {
+  font-size: 1.3rem;
+  line-height: 1.5;
+
+  .main-button {
+    text-align: center;
+
+    > button {
+      font-size: 1.5rem;
+      line-height: 3rem;
+      height: 3rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+
+  h2 {
+    border-bottom: 1px solid gray;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 60%;
+    padding-bottom: 2rem;
+  }
+
+  p {
+    text-indent: 2rem;
+    text-align: justify;
+  }
+
+  ol li {
+    text-align: justify;
+  }
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+
+  > table {
+    width: calc(var(--column-count) * 4.5rem);
+    min-width: calc(var(--column-count) * 4.5rem);
+    table-layout: fixed;
+    font-size: 10px;
+
+    th,
+    td {
+      min-width: 3.75rem;
+      padding: .25rem .3rem;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    th[data-column='IsolateID'],
+    td[data-column='IsolateID'],
+    th[data-column='PersonID'],
+    td[data-column='PersonID'],
+    th[data-column='CloneID'],
+    td[data-column='CloneID'],
+    th[data-column$='Range'],
+    td[data-column$='Range'],
+    th[data-column='Virus'],
+    td[data-column='Virus'],
+    th[data-column='Country'],
+    td[data-column='Country'],
+    th[data-column='Year'],
+    td[data-column='Year'],
+    th[data-column='Source'],
+    td[data-column='Source'],
+    th[data-column='ART'],
+    td[data-column='ART'],
+    th[data-column='RTI'],
+    td[data-column='RTI'] {
+      min-width: 3.25rem;
+    }
+
+    th[data-column='Recent Regimen'],
+    td[data-column='Recent Regimen'] {
+      min-width: 6.5rem;
+    }
+
+    th[data-column$='DRMs'],
+    td[data-column$='DRMs'],
+    th[data-column$='Unusual'],
+    td[data-column$='Unusual'] {
+      min-width: 5rem;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+    }
+
+    th:first-child {
+      z-index: 2;
+    }
+
+    td:first-child {
+      background-color: #fff;
+      box-shadow: .25rem 0 .4rem -0.4rem rgba(0, 0, 0, .45);
+    }
+  }
+}
+
+.processing-progress {
+  max-width: 56rem;
+  margin: 1.5rem auto 0;
+  padding: .9rem 1.1rem;
+  border: 1px solid #bfdbfe;
+  border-radius: .25rem;
+  background-color: #eff6ff;
+
+  p {
+    margin: 0 0 .6rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .processing-status {
+    margin-bottom: .3rem;
+    color: #1e3a8a;
+    font-size: 1rem;
+  }
+
+  :global(.sequence-progress-bar) {
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: #dbeafe;
+  }
+
+  :global(.sequence-progress-bar .progressbar-progress) {
+    border-radius: inherit;
+  }
+}
+
+.form-container button[name='submit']:disabled {
+  position: relative;
+  color: transparent;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    content: 'Processing…';
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-controls {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .detail-controls::before {
+    display: none;
+  }
+
+  .descriptions,
+  .treatment-group {
+    width: 100%;
+  }
+
+  .treatment-group {
+    padding-left: 0;
+  }
+
+  .input-group {
+    align-items: stretch;
+  }
+
+  .input-group .input-label {
+    width: 100%;
+  }
+}

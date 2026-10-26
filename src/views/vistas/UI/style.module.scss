@@ -1,0 +1,30 @@
+
+.popups {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid black;
+  padding: 10px;
+  background-color: white;
+  max-width: 80%;
+}
+
+
+.table-view {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  // font-family: Arial Narrow,Source Sans Pro,Helvetica Neue,Helvetica,Segoe UI,Arial,freesans,sans-serif;
+
+  th {
+    background-color: #f9fafb;
+  }
+
+  th, td {
+    border: 1px solid #969696;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px;
+    width: 5em;
+    text-wrap: wrap;
+  }
+}

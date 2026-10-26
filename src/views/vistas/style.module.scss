@@ -1,0 +1,144 @@
+.analyze-base-form {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    font-size: 1.1rem;
+    .analyze-base-form-buttons {
+      margin-top: 1rem;
+    }
+
+    .analyze-base-form-submit-options {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      > span {
+        display: block;
+        margin-left: 1rem;
+        float: right;
+        > label {
+          margin-right: 0;
+        }
+      }
+      &::after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+    }
+
+    .analyze-base-form-buttons {
+      &::after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+
+      > button {
+        margin-left: 1rem;
+        float: right;
+      }
+    }
+
+  }
+
+.instruction3 {
+  font-size: 1.3rem;
+  line-height: 1.5;
+
+  .main-button {
+    text-align: center;
+
+    > button {
+      font-size: 1.5rem;
+      line-height: 3rem;
+      height: 3rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+
+  h2 {
+    border-bottom: 1px solid gray;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 60%;
+    padding-bottom: 2rem;
+  }
+
+  p {
+    text-indent: 2rem;
+    text-align: justify;
+  }
+
+  ol li {
+    text-align: justify;
+  }
+}
+
+.instruction {
+  font-size: 1.3rem;
+  line-height: 1.5;
+
+  .main-button {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+
+    > button {
+    min-width: 12rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    border-radius: 0.25rem;
+    }
+  }
+
+  h2 {
+      border-bottom: 1px solid gray;
+  }
+
+  img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 60%;
+      padding-bottom: 2rem;
+  }
+
+  p {
+      text-indent: 2rem;
+      text-align: justify;
+  }
+
+  ol li {
+      text-align: justify;
+  }
+
+  @media (max-width: 40rem) {
+    .main-button {
+      flex-direction: column;
+
+      > button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+.selection-drug {
+  display: inline-block;
+  min-width: 8.7rem;
+}
+
+.selection-drug-label {
+  display: inline-block;
+  margin-left: .3rem;
+  // margin-right: 1rem;
+  min-width: 6rem;
+}

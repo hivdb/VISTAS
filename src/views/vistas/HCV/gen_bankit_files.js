@@ -1,0 +1,429 @@
+import {virusToFullName} from "../viruses";
+import cloneDeep from 'lodash/cloneDeep';
+
+function getCodonStart(leadingTrimCount, useFullSequenceRange) {
+  if (!useFullSequenceRange) {
+    return 1;
+  }
+
+  const remainder = (leadingTrimCount || 0) % 3;
+  if (remainder === 0) {
+    return 1;
+  }
+
+  return 4 - remainder;
+}
+
+export default function genBankItFiles(
+    isolates, descriptions, buildNote, AdjustIsolateGene,
+    sortByGeneName, DRM_GENE_FULLNAME
+  ) {
+  isolates = cloneDeep(isolates);
+  descriptions = cloneDeep(descriptions);
+
+  isolates = mapDescription(isolates, descriptions);
+
+  isolates = isolates.reduce((acc, isolate) => {
+    return [...acc, ...AdjustIsolateGene(isolate)];
+  }, []);
+
+  const sequences = [];
+  const features = [];
+
+  // console.log(isolates);
+
+  isolates.sort(sortByGeneName).forEach((isolate) => {
+    if (isolate.GenBankRejected) {
+      return;
+    }
+
+    if ((isolate.GenBankSeq?.length || 0) < 100) {
+      return;
+    }
+
+    const description = getIsolateDescHeader(isolate, buildNote);
+
+    if (!description) {
+      return;
+    }
+
+    sequences.push({
+      header: `>${isolate.IsolateID} ${description}`,
+      sequence: isolate.GenBankSeq,
+      Isolate: isolate.IsolateID
+    });
+
+    features.push(...updateFeatureTable(isolate, sortByGeneName, DRM_GENE_FULLNAME));
+    return;
+  });
+
+  return [sequences, features];
+}
+
+function mapDescription(isolates, descriptions) {
+
+  descriptions = descriptions.reduce((group, item) => {
+    const {IsolateID} = item;
+    group[IsolateID] = item;
+    return group;
+  }, {});
+
+  isolates.forEach((iso) => {
+    iso.description = descriptions[iso.IsolateID];
+  });
+
+  return isolates;
+}
+
+
+function getIsolateDescHeader(isolate, buildNote) {
+
+  const mod = isolate.description;
+
+  if (!mod) {
+    return null;
+  }
+
+  // TODO, modify before this function, after merge editTable module
+  if (mod['Source'] === 'PBMC') {
+    mod['Source'] = 'Peripheral blood mononuclear cells';
+  }
+
+  mod['Organism'] = (mod.Organism in virusToFullName) ? virusToFullName[mod.Organism] : mod.Organism;
+
+  let description = {
+    'Collection_date': formatDate(mod['Year']),
+    Country: mod['Country'],
+    Organism: mod.Organism,
+    Host: mod.Host,
+    Isolate: isolate.IsolateID,
+    'Isolation Source': mod['Source']
+  };
+
+  const subtypeKeys = ['Genotype', 'Subtype', 'Group'];
+  subtypeKeys.forEach((key) => {
+    if (key in mod) {
+      description[key] = mod[key] || isolate.subtype;
+    }
+  });
+
+  if (mod.CloneID) {
+    description.Clone = mod.CloneID;
+  }
+
+  const note = buildNote(mod);
+  if (note) {
+    description.note = note;
+  }
+
+  let descList = [];
+
+  Object.entries(description).forEach(
+    ([key, value]) => {
+      descList.push(`[${key}=${value}]`);
+    }
+  );
+
+  return descList.join(' ');
+}
+
+
+function formatDate(collectDate) {
+  if (collectDate.length === 4) {
+    return collectDate;
+  }
+
+  const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
+  const match = collectDate.match(regex);
+  let year = match[1];
+  let month = match[2] - 1;
+  let day = match[3];
+
+  let date = new Date(year, month, day);
+  day = String(date.getDate()).padStart(2, '0');
+  month = date.toLocaleString('default', {month: 'short'});
+  year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+
+function updateFeatureTable(isolate, sortByGeneName, DRM_GENE_FULLNAME) {
+  const feature = [`>Feature ${isolate.IsolateID}`];
+  const isolateSeqLength = isolate.GenBankSeq.length;
+  const exportableGenes = Object.keys(isolate.genes).filter((geneName) => {
+    return !isolate.genes[geneName].ignoreFeature && !isolate.genes[geneName].missing;
+  });
+  const useFullSequenceRange = !isolate.use_full_genome && exportableGenes.length === 1;
+
+  Object.keys(isolate.genes).sort(sortByGeneName)
+    .forEach((geneName, idx) => {
+      const gene = isolate.genes[geneName];
+
+      if (gene.missing) {
+        feature.push(...featureAssemblyGaps(gene.adjustedNATailing));
+        return;
+      }
+
+      if (gene.ignoreFeature) {
+        return;
+      }
+
+      if (!isolate.use_full_genome) {
+        feature.push(...featureGene(gene, isolateSeqLength, useFullSequenceRange));
+      }
+
+      if ('AdjustedfirstNA' in gene.alignment) {
+        feature.push(...featureGaps(gene));
+      }
+
+      if (isNonFunctional(gene)) {
+        feature.push(...featureNonFunctional(
+          gene,
+          isolateSeqLength,
+          DRM_GENE_FULLNAME,
+          useFullSequenceRange
+        ));
+      } else {
+        feature.push(...featureCDs(
+          isolate,
+          gene,
+          isolateSeqLength,
+          DRM_GENE_FULLNAME,
+          useFullSequenceRange
+        ));
+      }
+
+      if (
+        gene.NAgaps_tailing_exists &&
+        (!isolate.near_full_length) &&
+        (idx < (Object.keys(isolate.genes).length - 1))) {
+        feature.push(...featureAssemblyGaps(gene.adjustedNATailing));
+      }
+
+    });
+
+  feature.push('');
+
+  return feature;
+}
+
+function getFeatureStart(gene) {
+  return ('AdjustedfirstNA' in gene.alignment) ?
+    gene.alignment.AdjustedfirstNA :
+    gene.alignment.firstNA;
+}
+
+function getFeatureStop(gene) {
+  return ('AdjustedlastNA' in gene.alignment) ?
+    gene.alignment.AdjustedlastNA :
+    gene.alignment.lastNA;
+}
+
+function getFeatureRange(gene, isolateSeqLength, useFullSequenceRange = false) {
+  if (useFullSequenceRange) {
+    return {
+      start: 1,
+      stop: isolateSeqLength
+    };
+  }
+
+  return {
+    start: getFeatureStart(gene),
+    stop: getFeatureStop(gene)
+  };
+}
+
+
+function featureGene(gene, isolateSeqLength, useFullSequenceRange = false) {
+  const feature = [];
+  const {start, stop} = getFeatureRange(gene, isolateSeqLength, useFullSequenceRange);
+
+  if (start > stop) {
+    feature.push([
+      `${start}`,
+      `${isolateSeqLength}`,
+      'gene'
+    ].join('\t'));
+    feature.push([
+      `1`,
+      `${stop}`,
+    ].join('\t'));
+  } else {
+    feature.push([
+      `<${start}`,
+      `>${stop}`,
+      'gene'
+    ].join('\t'));
+  }
+
+  feature.push([
+    '',
+    '',
+    '',
+    'gene',
+    gene.geneName
+  ].join('\t'));
+
+  return feature;
+}
+
+
+function featureGaps(gene) {
+  const feature = [];
+
+  let gapList = gene.AdjustedNAgaps || [];
+
+  gapList = gapList
+    .slice()
+    .sort((a, b) => a[0] - b[0])
+    .reduce((merged, [start, stop, gapL]) => {
+      const lastGap = merged[merged.length - 1];
+
+      if (lastGap && lastGap[1] + 1 === start) {
+        lastGap[1] = stop;
+        lastGap[2] += gapL;
+      } else {
+        merged.push([start, stop, gapL]);
+      }
+
+      return merged;
+    }, []);
+
+  gapList.map(([start, stop, gapL]) => {
+    feature.push([
+      `${start}`,
+      `${stop}`,
+      'gap'
+    ].join('\t'));
+
+    feature.push([
+      '',
+      '',
+      '',
+      'estimated_length',
+      `${gapL}`
+    ].join('\t'));
+
+    return null;
+  });
+
+  return feature;
+}
+
+function featureAssemblyGaps(tailing_gap) {
+  const feature = [];
+
+  const [start, stop, gapL] = tailing_gap;
+
+  feature.push([
+    `<${start}`,
+    `>${stop}`,
+    'misc_feature'
+  ].join('\t'));
+
+  feature.push([
+    '',
+    '',
+    '',
+    'note',
+    `gap, estimated length, ${gapL} base pairs`
+  ].join('\t'));
+
+  return feature;
+}
+
+
+function isNonFunctional(gene) {
+  if (gene.stops.length > 0 || (!gene.alignment.translatable)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function featureNonFunctional(gene, isolateSeqLength, DRM_GENE_FULLNAME, useFullSequenceRange = false) {
+  const feature = [];
+  const {start, stop} = getFeatureRange(gene, isolateSeqLength, useFullSequenceRange);
+
+  if (start > stop) {
+    feature.push([
+      `${start}`,
+      `${isolateSeqLength}`,
+      'misc_feature'
+    ].join('\t'));
+    feature.push([
+      `1`,
+      `${stop}`,
+    ].join('\t'));
+  } else {
+    feature.push([
+      `<${start}`,
+      `>${stop}`,
+      'misc_feature'
+    ].join('\t'));
+  }
+
+  const productName = (gene.geneName in DRM_GENE_FULLNAME) ? DRM_GENE_FULLNAME[gene.geneName] : gene.geneName;
+  feature.push([
+    '',
+    '',
+    '',
+    'note',
+    (`nonfunctional ${productName}` +
+      ` due to mutation;`)
+  ].join('\t'));
+
+  return feature;
+}
+
+
+function featureCDs(isolate, gene, isolateSeqLength, DRM_GENE_FULLNAME, useFullSequenceRange = false) {
+
+  const feature = [];
+  const {start, stop} = getFeatureRange(gene, isolateSeqLength, useFullSequenceRange);
+
+  if (start > stop) {
+    // For loop genome
+    feature.push([
+      `${start}`,
+      `${isolateSeqLength}`,
+      'CDS'
+    ].join('\t'));
+    feature.push([
+      `1`,
+      `${stop}`,
+    ].join('\t'));
+  } else {
+    feature.push([
+      `<${start}`,
+      `>${stop}`,
+      'CDS'
+    ].join('\t'));
+  }
+
+
+  feature.push([
+    '', '', '', 'gene', gene.geneName
+  ].join('\t'));
+
+  const codonStart = getCodonStart(
+    isolate.GenBankLeadingTrimCount || 0,
+    useFullSequenceRange
+  );
+
+  feature.push([
+    '', '', '', 'codon_start', `${codonStart}`
+  ].join('\t'));
+
+  const productName = (gene.geneName in DRM_GENE_FULLNAME) ? DRM_GENE_FULLNAME[gene.geneName] : gene.geneName;
+
+  feature.push([
+    '', '', '', 'product', productName
+  ].join('\t'));
+
+  feature.push([
+    '', '', '', 'transl_table', '1'
+  ].join('\t'));
+
+  return feature;
+}

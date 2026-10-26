@@ -1,0 +1,44 @@
+[
+  {
+    "name": "3TC",
+    "fullName": "lamivudine",
+    "displayAbbr": "3TC",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "FTC",
+    "fullName": "emtricitabine",
+    "displayAbbr": "FTC",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "ADV",
+    "fullName": "adefovir",
+    "displayAbbr": "ADV",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "ETV",
+    "fullName": "entecavir",
+    "displayAbbr": "ETV",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "LdT",
+    "fullName": "telbivudine",
+    "displayAbbr": "LdT",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "TAF",
+    "fullName": "tenofovir alafenamide",
+    "displayAbbr": "TAF",
+    "drugClass": "RTI"
+  },
+  {
+    "name": "TDF",
+    "fullName": "tenofovir disoproxil fumarate ",
+    "displayAbbr": "TDF",
+    "drugClass": "RTI"
+  }
+]

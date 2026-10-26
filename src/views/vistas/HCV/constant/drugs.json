@@ -1,0 +1,92 @@
+[
+  {
+    "name":"SOF",
+    "fullName":"Sofosbuvir",
+    "displayAbbr":"SOF",
+    "drugClass":"NI"
+  },
+  {
+    "name":"GLE",
+    "fullName":"Glecaprevir",
+    "displayAbbr":"GLE",
+    "drugClass":"NS3_I"
+  },
+  {
+    "name":"VOX",
+    "fullName":"Voxilaprevir",
+    "displayAbbr":"VOX",
+    "drugClass":"NS3_I"
+  },
+  {
+    "name":"LDV",
+    "fullName":"Ledipasvir",
+    "displayAbbr":"LDV",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"VEL",
+    "fullName":"Velpatasvir",
+    "displayAbbr":"VEL",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"PIB",
+    "fullName":"Pibrentasvir",
+    "displayAbbr":"PIB",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"DSV",
+    "fullName":"Dasabuvir",
+    "displayAbbr":"DSV",
+    "drugClass":"NNI"
+  },
+  {
+    "name":"DCV",
+    "fullName":"Daclatasvir",
+    "displayAbbr":"DCV",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"OBV",
+    "fullName":"Ombitasvir",
+    "displayAbbr":"OBV",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"EBR",
+    "fullName":"Elbasvir",
+    "displayAbbr":"EBR",
+    "drugClass":"NS5A_I"
+  },
+  {
+    "name":"PTV",
+    "fullName":"Paritaprevir",
+    "displayAbbr":"PTV",
+    "drugClass":"NS3_I"
+  },
+  {
+    "name":"GZR",
+    "fullName":"Grazoprevir",
+    "displayAbbr":"GZR",
+    "drugClass":"NS3_I"
+  },
+  {
+    "name": "NS3_I",
+    "fullName": "NS3_I_Unknown",
+    "displayAbbr": "NS3_I",
+    "drugClass": "NS3_I"
+  },
+  {
+    "name": "NI",
+    "fullName": "NI_Unknown",
+    "displayAbbr": "NI",
+    "drugClass": "NI"
+  },
+  {
+    "name":"NS5A_I",
+    "fullName":"NS5A_I_Unknown",
+    "displayAbbr":"NS5A_I",
+    "drugClass":"NS5A_I"
+  }
+]
