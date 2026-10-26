@@ -26,10 +26,6 @@ export function generateEditableTable(alignments, gTreatment, gDesc) {
   alignments.map((isolate) => {
     const genes = isolate.genes;
 
-    // const genes = seqs.map((s) => s.gene).join(', ');
-    // TODO: when merge isolates, the subtype should also be merged.
-    // const subtypes = [...new Set(seqs.map((s) => s.subtype.toUpperCase().replace('GENOTYPE', '').trim()))].join(', ');
-    // TODO: this should be genotype, or can use Genotype only at print
     const genotype = isolate.genotype.toUpperCase().replace('GENOTYPE', '').trim();
     const subtypes = isolate.subtype.toUpperCase().replace('GENOTYPE', '').trim();
     personID += 1;
@@ -48,12 +44,10 @@ export function generateEditableTable(alignments, gTreatment, gDesc) {
     }
 
     Object.assign(row, {
-      // Genes: genes,
       'NS3 Range': genes.NS3?.alignment.gene_AA_range || '',
       'NS5A_NTD Range': genes.NS5A_NTD?.alignment.gene_AA_range || '',
       'NS5B Range': genes.NS5B?.alignment.gene_AA_range || '',
       Virus: gDesc.organism,
-      // Host: gDesc.host,
       'Country': gDesc.country,
       'Year': gDesc.isolateDate,
       'Source': gDesc.isolationSource
@@ -90,14 +84,10 @@ export function generateEditableTable(alignments, gTreatment, gDesc) {
       'NS3_I DRMs': genes.NS3?.DRMs || '',
       'NS5A_I DRMs': genes.NS5A_NTD?.DRMs || '',
       'NI DRMs': genes.NS5B?.DRMs || '',
-      // 'NNI DRMs': genes.NS5B?.DRMs || '',
       'NS3 Ins': genes.NS3?.insertions || '',
       'NS5A Ins': genes.NS5A_NTD?.insertions || '',
       'NS5B Ins': genes.NS5B?.insertions || '',
       'Stops': formatStopMutations(genes, sortByGeneName),
-      // 'NS3 Unusual': genes.NS3?.unusual || '',  // TODO '' is needed?
-      // 'NS5A_NTD Unusual': genes.NS5A_NTD?.unusual || '',
-      // 'NS5B Unusual': genes.NS5B?.unusual || '',
     });
 
     Object.assign(row, getSequenceQualityColumns(isolate));

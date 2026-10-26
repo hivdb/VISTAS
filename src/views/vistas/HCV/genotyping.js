@@ -48,13 +48,6 @@ export async function genotyping(seqReport, url) {
                 nextStrain.toLowerCase() !== 'unknown'
             );
 
-            if (hasValidSubtype && i.subtype !== nextSubtype) {
-                console.log('HCV genotyping subtype updated', {
-                    IsolateID: i.IsolateID,
-                    originalSubtype: i.subtype,
-                    newSubtype: nextSubtype
-                });
-            }
             if (hasValidSubtype) {
                 i.subtype = nextSubtype;
             }

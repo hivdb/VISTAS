@@ -8,7 +8,6 @@ import style from './style.module.scss';
 
 export default function InstructionPart3() {
   return <div className={style['instruction3']}>
-    {/* <h2>Instructions on GenBank Submission</h2> */}
     <p>Go to the Submission Portal web page: <ExtLink href={"https://submit.ncbi.nlm.nih.gov/"}>https://submit.ncbi.nlm.nih.gov/</ExtLink>.</p>
     <ul>
       <li>Go to <em>Submission Portal - GenBank</em>.</li>

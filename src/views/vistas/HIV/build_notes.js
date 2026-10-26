@@ -34,19 +34,9 @@ export function buildNote(mod) {
   if (mod.CAI !== 'None' && mod.CAI) {
     note += `CAI (${mod.CAI.toUpperCase()}); `;
   }
-  // if (mod['Entry Inhibitor'] !== 'None' && mod['Entry Inhibitor']) {
-  //   note += `Entry Inhibitor (${mod['Entry Inhibitor'].toUpperCase()}); `;
-  // }
-
   if (mod['Recent Regimen'] !== 'None' && mod['Recent Regimen']) {
       note += `Recent Regimen (${mod['Recent Regimen'].toUpperCase()}); `;
   }
-  // if (mod['Previous Regimen'] !== 'None' && mod['Previous Regimen']) {
-  //   note += `Previous Regimen (${mod['Previous Regimen'].toUpperCase()}); `;
-  // }
-  // if (mod.OtherRegimen !== 'None' && mod.OtherRegimen) {
-  //   note += `Other Regimen (${mod.OtherRegimen.toUpperCase()}); `;
-  // }
 
   return note;
 }

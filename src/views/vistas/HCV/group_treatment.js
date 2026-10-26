@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 
-import CheckboxInput from 'icosa/components/checkbox-input';
 import drugs from './constant/drugs.json';
 import MainTreatment from './main_treatment';
 
@@ -25,26 +24,6 @@ export default function GroupTreatment({onSelectTreatment}) {
   useEffect(() => {
     onSelectTreatment(treatment);
   }, [onSelectTreatment, treatment]);
-
-  // useEffect(() => {
-  //   if (onSelectTreatment) {
-  //     if (selectedOption.value !== 'Experienced') {
-  //       onSelectTreatment({
-  //         TreatmentStatus: selectedOption.value,
-  //         DrugClass: 'None',
-  //         NI: 'None',
-  //         NS3_I: 'None',
-  //         NS5A_I: 'None',
-  //         NNI: 'None',
-  //         RecentRegimen: 'None'
-  //         // PreviousRegimen: 'None'
-  //       });
-  //     } else {
-  //       treatment.TreatmentStatus = selectedOption.value;
-  //       onSelectTreatment(treatment);
-  //     }
-  //   }
-  // }, [selectedOption, treatment, onSelectTreatment]);
 
   const DRUGCLASSES = [
     'NI',

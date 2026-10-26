@@ -78,25 +78,12 @@ function getReferenceSequence(subtype, geneName, fallbackDisplay = '') {
   return geneRef?.refSequence || null;
 }
 
-function getReferenceAA(referenceSequence, position, fallbackRefAA = '', context = {}) {
+function getReferenceAA(referenceSequence, position, fallbackRefAA = '') {
   if (!referenceSequence || !Number.isInteger(position) || position < 1) {
-    console.log('Fallback to grouped prettyPairwise reference amino acid: missing reference sequence or invalid position', {
-      ...context,
-      position,
-      fallbackRefAA
-    });
     return fallbackRefAA;
   }
 
   const referenceAA = referenceSequence[position - 1];
-  if (!referenceAA) {
-    console.log('Fallback to grouped prettyPairwise reference amino acid: missing amino acid in reference sequence', {
-      ...context,
-      position,
-      fallbackRefAA
-    });
-  }
-
   return referenceAA || fallbackRefAA;
 }
 
@@ -374,11 +361,7 @@ function getGeneDRMs(seq, DRM_LIST, mode= "default", subtype) {
     let matchedDRMs = new Set();
 
     groupedMutations.forEach(({position, fallbackRefAA, mutAA}) => {
-      const refAA = getReferenceAA(referenceSequence, position, fallbackRefAA, {
-        geneName,
-        subtype,
-        sequenceName: seq.inputSequence.header
-      });
+      const refAA = getReferenceAA(referenceSequence, position, fallbackRefAA);
 
       if (hasSpecialDRM(geneName, position, mutAA, refAA)) {
         matchedDRMs.add(`${refAA}${position}${mutAA}`);
@@ -481,11 +464,7 @@ function getStrictGeneDRMs(seq, subtype, strictDrmList) {
     let matchedDRMs = new Set();
 
     groupedMutations.forEach(({position, fallbackRefAA, mutAA}) => {
-      const refAA = getReferenceAA(referenceSequence, position, fallbackRefAA, {
-        geneName,
-        subtype,
-        sequenceName: seq.inputSequence.header
-      });
+      const refAA = getReferenceAA(referenceSequence, position, fallbackRefAA);
 
       if (drmList[position]) {
         // Check if ANY character in mutAA is in drmlist[position]
@@ -598,13 +577,7 @@ export default function Process({sequences, onComplete, mode}) {
         return;
       }
 
-      console.log('mergeIsolates length', {
-        before: alignments.length
-      });
       alignments = mergeIsolates(alignments);
-      console.log('mergeIsolates length', {
-        after: alignments.length
-      });
 
       let alignments_with_drm = [];
       processed = 0;
