@@ -8,7 +8,7 @@ VISTAS is available at [https://hivdb.stanford.edu/vistas/](https://hivdb.stanfo
 
 The source code is available in this repository.
 
-Sequence analysis sends uploaded sequences to external GraphQL services at `hivdb.stanford.edu`. An internet connection and access to those services are required for the analysis steps.
+When you analyze sequences, VISTAS sends the uploaded sequences to GraphQL services at `hivdb.stanford.edu`. Sequence analysis requires an internet connection and access to those services.
 
 ## Run locally
 
